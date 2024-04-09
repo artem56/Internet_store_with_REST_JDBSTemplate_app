@@ -1,7 +1,6 @@
 package com.example.application_dev.controller;
 
 import com.example.application_dev.Entity.UserEntity;
-//import com.example.application_dev.repository.UserRepository;
 import com.example.application_dev.Exeptions.UserAlreadyExistExeption;
 import com.example.application_dev.Exeptions.UserNotExistExeption;
 import com.example.application_dev.service.UserService;
@@ -11,22 +10,19 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
 
-//FOR JPA
-//    @Autowired
-//    private UserRepository userRepository;
+    @RequestMapping(value = "/registration")
 
-    @PostMapping
     public ResponseEntity registration (@RequestBody UserEntity user){
 
         try
         {
-            userService.registration(user);
-            return ResponseEntity.ok(String.format("Пользователь %s %s успешно сохранён", user.getFirstName(), user.getLastName()));
+
+            return ResponseEntity.ok(userService.registration(user));
         }
         catch(UserAlreadyExistExeption e)
         {
@@ -35,6 +31,46 @@ public class UserController {
         catch(Exception e)
         {
             return ResponseEntity.badRequest().body("jdbc user insert failed");
+        }
+
+    }
+
+    //@PostMapping("/login")
+    @RequestMapping(value = "/login")
+    public ResponseEntity login (@RequestBody UserEntity user){
+
+        try
+        {
+            return ResponseEntity.ok(userService.login(user));
+        }
+        catch(Exception e)
+        {
+            return ResponseEntity.badRequest().body("login failed");
+        }
+
+    }
+
+    //@PostMapping("/auth")
+    @RequestMapping(value = "/auth")
+    public ResponseEntity auth (@RequestHeader("Authorization") String authorizationHeader){
+
+        String[] parts = authorizationHeader.split(" ");
+        String token = null;
+        if (parts.length == 2) {
+            token = parts[1];
+        }
+        if (token == null) {
+            return ResponseEntity.badRequest().body("auth token is null");
+        }
+
+        try
+        {
+            UserEntity newuser = userService.verify_token(token);
+            return ResponseEntity.ok(userService.generateJwt(newuser));
+        }
+        catch(Exception e)
+        {
+            return ResponseEntity.badRequest().body("auth failed");
         }
 
     }

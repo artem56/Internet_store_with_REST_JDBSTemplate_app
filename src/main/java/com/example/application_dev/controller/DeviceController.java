@@ -4,6 +4,7 @@ import com.example.application_dev.Entity.DeviceEntity;
 import com.example.application_dev.Exeptions.DeviceAlreadyExistException;
 import com.example.application_dev.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,11 @@ public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
+
+    @Value("${uploadDirectoryPath}")
+    private String uploadDirectoryPath;
+
+
 
     @RequestMapping( method = RequestMethod.POST,
             consumes = {"multipart/form-data"})
@@ -48,7 +54,7 @@ public class DeviceController {
         {
             //Сохраняем файл под рандомным названием, путь до файла пишем в бд
             String filename = UUID.randomUUID().toString() + ".jpg";
-            String uploadDirectory = "C:\\Users\\Admin\\my_projects\\internet_store_back_on_java_jdbs\\src\\main\\resources\\static";
+            String uploadDirectory = uploadDirectoryPath;
             try {
                 // Create directory if it doesn't exist
                 Path directoryPath = Paths.get(uploadDirectory);

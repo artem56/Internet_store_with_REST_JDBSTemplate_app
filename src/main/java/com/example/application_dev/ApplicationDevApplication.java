@@ -30,17 +30,20 @@ public class ApplicationDevApplication implements CommandLineRunner {
 	public void run(String... strings) throws Exception {
 
 		log.info("Creating tables");
-//		jdbcTemplate.execute("Drop table if exists users ");
-//		jdbcTemplate.execute("Drop table if exists devices ");
-//		jdbcTemplate.execute("Drop table if exists brands ");
-//		jdbcTemplate.execute("Drop table if exists types ");
+
 
 
 		//log.info("Drop table users, brands, types, devices");
-		jdbcTemplate.execute("Create table if not EXISTS users (user_id serial PRIMARY KEY, email varchar(35), password varchar(100), role varchar (35)) ");
-		jdbcTemplate.execute("Create table if not EXISTS brands (brand_id serial PRIMARY KEY, name varchar(35)) ");
-		jdbcTemplate.execute("Create table if not EXISTS types (type_id serial PRIMARY KEY, name varchar(35)) ");
-		jdbcTemplate.execute("Create table if not EXISTS devices (device_id serial PRIMARY KEY, name varchar(35), brand_brand_id integer references brands (brand_id), type_type_id integer references types (type_id), price integer, rating integer , img varchar (200), info varchar (200)) ");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS users (user_id SERIAL PRIMARY KEY, email VARCHAR(35), password VARCHAR(100), role VARCHAR(35))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS brands (brand_id SERIAL PRIMARY KEY, name VARCHAR(35))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS types (type_id SERIAL PRIMARY KEY, name VARCHAR(35))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS devices (device_id SERIAL PRIMARY KEY, name VARCHAR(35), brand_brand_id INTEGER REFERENCES brands (brand_id), type_type_id INTEGER REFERENCES types (type_id), price INTEGER, rating INTEGER, img VARCHAR(200), info VARCHAR(200))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS user_data (user_user_id INTEGER REFERENCES users (user_id), phone_number VARCHAR(15), name VARCHAR(35), address VARCHAR(100), CONSTRAINT unique_user_user_id UNIQUE (user_user_id))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS orders (order_id SERIAL PRIMARY KEY, user_user_id INTEGER REFERENCES users (user_id), order_date DATE, status VARCHAR(20))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS order_items (order_item_id SERIAL PRIMARY KEY, order_order_id INTEGER REFERENCES orders (order_id), device_device_id INTEGER REFERENCES devices (device_id), quantity INTEGER, price INTEGER)");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS reviews (review_id SERIAL PRIMARY KEY, user_user_id INTEGER REFERENCES users (user_id), device_device_id INTEGER REFERENCES devices (device_id), rating INTEGER, comment VARCHAR(255), review_date DATE)");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS carts (cart_id SERIAL PRIMARY KEY, user_user_id INTEGER REFERENCES users (user_id))");
+		jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS cart_items (cart_item_id SERIAL PRIMARY KEY, cart_cart_id INTEGER REFERENCES carts (cart_id), device_device_id INTEGER REFERENCES devices (device_id), quantity INTEGER)");
 		log.info("Create table users, brands, types, devices");
 
 

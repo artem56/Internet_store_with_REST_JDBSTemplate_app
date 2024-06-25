@@ -1,18 +1,11 @@
 package com.example.application_dev.Entity;
-//FOR JPA
-//import jakarta.persistence.Entity;
-//import jakarta.persistence.GeneratedValue;
-//import jakarta.persistence.GenerationType;
-//import jakarta.persistence.Id;
-
-//@Entity
 
 public class UserEntity {
-    //FOR JPA
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
-    private String email, password, role;
+    private String email;
+    private String password;
+    private String role;
+
     public UserEntity() {
     }
 
@@ -26,7 +19,7 @@ public class UserEntity {
     @Override
     public String toString() {
         return String.format(
-                "User[id=%d, email='%s', password= '%s', role='%s']", id, email,password, role);
+                "User[id=%d, email='%s', password='%s', role='%s']", id, email, password, role);
     }
 
     public long getId() {

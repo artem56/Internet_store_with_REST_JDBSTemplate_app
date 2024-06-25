@@ -1,5 +1,6 @@
 package com.example.application_dev.controller;
 
+import com.example.application_dev.Entity.UserData;
 import com.example.application_dev.Entity.UserEntity;
 import com.example.application_dev.Exeptions.UserAlreadyExistExeption;
 import com.example.application_dev.Exeptions.UserNotExistExeption;
@@ -7,6 +8,8 @@ import com.example.application_dev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 
 @RestController
@@ -42,6 +45,10 @@ public class UserController {
         try
         {
             return ResponseEntity.ok(userService.login(user));
+        }
+        catch ( UserNotExistExeption e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
         catch(Exception e)
         {
@@ -110,5 +117,21 @@ public class UserController {
         {
             return ResponseEntity.badRequest().body("Произошла ошибка при удалении пользователя с id " + user_id);
         }
+    }
+
+    @GetMapping("/data")
+    public ResponseEntity<UserData> getUserData(@RequestParam("userId") int userId) {
+        UserData userData = userService.getUserData(userId);
+        return ResponseEntity.ok(userData);
+    }
+
+    @PostMapping("/data")
+    public ResponseEntity<String> updateUserData(@RequestBody Map<String, Object> payload) {
+        int userId = (int) payload.get("userId");
+        String phoneNumber = (String) payload.get("phoneNumber");
+        String name = (String) payload.get("name");
+        String address = (String) payload.get("address");
+        userService.updateUserData(userId, phoneNumber, name, address);
+        return ResponseEntity.ok("User data updated");
     }
     }
